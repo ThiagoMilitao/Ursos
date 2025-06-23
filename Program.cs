@@ -68,8 +68,8 @@ class Program
             Console.Write("Informe o peso do urso (em kg, entre 1 e 250): ");
             if (!double.TryParse(Console.ReadLine(), out double peso) || peso <= 0 || peso > 250)
             {
-                 Console.WriteLine("\nEncerrando a coleta de dados...");
-                 break;
+                Console.WriteLine("\nEncerrando a coleta de dados...");
+                break;
             }
 
             Console.Write("Informe o sexo do urso (M para macho, F para fêmea): ");
@@ -93,7 +93,7 @@ class Program
             Console.ResetColor();
             return;
         }
-        
+
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("\n================= ANÁLISE DOS DADOS =================\n");
         Console.ResetColor();
@@ -118,7 +118,7 @@ class Program
         {
             Console.WriteLine($"Média do peso dos ursos fêmeas: {listfemeas.Average(u => u.Peso):F2} kg");
         }
-        
+
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
@@ -142,7 +142,7 @@ class Program
 
             Console.WriteLine($"| {cat,-12} | {qtd,5} | {pctUrsos,9:F0}% | {machos,6} | {pctMachos,10:F0}% | {femeas,6} | {pctFemeas,10:F0}% |");
         }
-        
+
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("|--------------|-------|------------|--------|-------------|--------|-------------|");
         double pctTotalMachos = totalUrsos > 0 ? (double)totalMachos / totalUrsos * 100 : 0;
@@ -153,5 +153,8 @@ class Program
         histogramas(listmachos, "Distribuição de Ursos Machos", ConsoleColor.Blue);
         histogramas(listfemeas, "Distribuição de Ursos Fêmeas", ConsoleColor.Magenta);
         histogramas(ursos, "Distribuição Total de Ursos", ConsoleColor.Green);
+        
+        Console.WriteLine("\nPressione Enter para fechar o programa...");
+        Console.ReadLine(); 
     }
 }
