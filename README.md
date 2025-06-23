@@ -1,69 +1,17 @@
 ## Exercício `Ursos`
 
-Faça um programa para análise de dados coletados de ursos selvagens.
+### 📖 Visão Geral do Projeto
 
-Para cada urso, receba o peso (kg) e o sexo (M/F). Finalize a coleta ao receber um peso zero, negativo ou acima de 250kg.
+Este programa permite que o usuário insira dados sobre ursos individuais, incluindo seu peso e sexo. Após a inserção dos dados, o sistema realiza uma análise estatística completa, calculando o urso mais pesado, a média de peso por sexo e a distribuição dos ursos em categorias de peso pré-definidas. Todos os resultados são apresentados no terminal.
 
-Para cada sexo, classifique os ursos em 5 categorias de peso:
-
-| Categoria    | Intervalo    |
-| ------------ | ------------ |
-| Muito Leve   | `]0, 50]`    |
-| Leve         | `]50, 100]`  |
-| Médio        | `]100, 150]` |
-| Pesado       | `]150, 200]` |
-| Muito Pesado | `]200, 250]` |
-
-Exiba:
-
-- o sexo e o peso do urso mais pesado;
-- a média de peso por sexo;
-- uma tabela de distribuição de frequência;
-- histogramas para ambos os sexos.
-
-Exemplo de tabela de distribuição de frequências:
-
-| Categoria | Ursos | Ursos (%) | Machos | Machos (%) | Fêmeas | Fêmeas (%) |
-| --------- | ----- | --------- | ------ | ---------- | ------ | ---------- |
-| ML        | 1     | 10%       | 0      | 0%         | 1      | 20%        |
-| L         | 2     | 20%       | 1      | 20%        | 1      | 20%        |
-| M         | 3     | 30%       | 1      | 20%        | 2      | 40%        |
-| P         | 3     | 30%       | 2      | 40%        | 1      | 20%        |
-| MP        | 1     | 20%       | 1      | 20%        | 0      | 0%         |
-| Total     | 10    | 100%      | 5      | 50%        | 5      | 50%        |
-
-Exemplo de histogramas:
-
-```
------ Ursos Machos -----
-   +...10...20...30...40...50...60...70...80...90..100
-ML |
-L  |**********
-M  |**********
-P  |********************
-MP |**********
-
------ Ursos Fêmeas -----
-   +...10...20...30...40...50...60...70...80...90..100
-ML |**********
-L  |**********
-M  |********************
-P  |**********
-MP |
-
------ Ursos (todos) -----
-   +...10...20...30...40...50...60...70...80...90..100
-ML |*****
-L  |**********
-M  |***************
-P  |***************
-MP |**********
-```
 ### _Scrennshot_
 
-![Tela do programa](tela.png)
+![Tela do programa](foto1.png)
 
-###_Donwload_
+
+![Tela do programa](foto2.png)
+
+### _Donwload_
 
 Baixe o arquivo abaixo. Descompacte na pasta desejada.
 

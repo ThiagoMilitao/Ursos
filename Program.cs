@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 class Urso
 {
@@ -9,7 +11,7 @@ class Urso
 
 class Program
 {
-    static string[] categorias = { "ML", "L", "M", "P", "MP" };
+    static readonly string[] categorias = { "ML", "L", "M", "P", "MP" };
 
     static string ClassificaPeso(double peso)
     {
@@ -20,97 +22,113 @@ class Program
         if (peso > 200 && peso <= 250) return "MP";
         return "Inválido";
     }
-
-   static void histogramas(List<Urso> lista, string titulo)
+    static void histogramas(List<Urso> lista, string titulo, ConsoleColor corDaBarra)
     {
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"\n-----  {titulo}  -----");
+        Console.ResetColor();
+
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("+...10...20...30...40...50...60...70...80...90..100");
+        Console.ResetColor();
+
         foreach (var category in categorias)
         {
             int count = lista.Count(u => u.Categoria == category);
             string barra = new string('*', count);
-            Console.WriteLine($"{category,-3}|{barra}");
-        }
+            
+            Console.Write($"{category,-3}|");
 
+            Console.ForegroundColor = corDaBarra;
+            Console.WriteLine(barra);
+            Console.ResetColor();
+        }
     }
 
     static void Main()
     {
-        Console.WriteLine("---------------------Ursos---------------------");
-        List<Urso> ursos = new List<Urso>();
+        // Título estilizado
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(@"
+ _    _
+| |  | |
+| |  | | _ __  ___   ___   ___
+| |  | || '__|/ __| / _ \ / __|
+| |__| || |   \__ \| (_) |\__ \
+ \____/ |_|   |___/ \___/ |___/
 
-        Console.WriteLine("Para encerrar, informe um peso menor ou igual a 0 ou maior que 250.\n");
+        ");
+        Console.ResetColor();
+
+        List<Urso> ursos = new List<Urso>();
+        Console.WriteLine("Para encerrar, informe um peso menor ou igual a 0.\n");
 
         while (true)
         {
             Console.Write("Informe o peso do urso (em kg, entre 1 e 250): ");
-            if (!double.TryParse(Console.ReadLine(), out double peso))
+            if (!double.TryParse(Console.ReadLine(), out double peso) || peso <= 0 || peso > 250)
             {
-                Console.WriteLine("Valor inválido. Por favor, digite um número válido para o peso.\n"); continue;
-            }
-            if (peso < 0 || peso > 250)
-            {
-                Console.Write("Informe o peso do urso (em kg, entre 1 e 250): ");
-                break;
+                 Console.WriteLine("\nEncerrando a coleta de dados...");
+                 break;
             }
 
             Console.Write("Informe o sexo do urso (M para macho, F para fêmea): ");
-            if (!char.TryParse(Console.ReadLine()!.ToUpper(), out char sexo))
+            if (!char.TryParse(Console.ReadLine()!.ToUpper(), out char sexo) || (sexo != 'M' && sexo != 'F'))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Sexo inválido. Digite apenas 'M' ou 'F'.\n");
+                Console.ResetColor();
                 continue;
             }
 
             string categoria = ClassificaPeso(peso);
-
-            ursos.Add(new Urso
-            {
-                Peso = peso,
-                Sexo = sexo,
-                Categoria = categoria
-            });
-           
+            ursos.Add(new Urso { Peso = peso, Sexo = sexo, Categoria = categoria });
+            Console.WriteLine("--- Urso registrado! --- \n");
         }
 
         if (ursos.Count == 0)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Nenhum urso foi registrado!");
+            Console.ResetColor();
             return;
         }
+        
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("\n================= ANÁLISE DOS DADOS =================\n");
+        Console.ResetColor();
+
         var listmachos = ursos.Where(u => u.Sexo == 'M').ToList();
         var listfemeas = ursos.Where(u => u.Sexo == 'F').ToList();
 
-        //Urso mais pesado
-        var listaOrdenada = ursos.OrderByDescending(e => e.Peso).First();
-        Console.WriteLine($"Urso mais pesado: {listaOrdenada.Peso}, Sexo: {listaOrdenada.Sexo}");
+        // Urso mais pesado
+        var ursoMaisPesado = ursos.OrderByDescending(e => e.Peso).First();
+        Console.Write("Urso mais pesado: ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"{ursoMaisPesado.Peso} kg, Sexo: {ursoMaisPesado.Sexo}");
+        Console.ResetColor();
 
-        double[] media = new double[2];
 
-        if (ursos.Any(u => u.Sexo == 'M'))
+        // Média de peso
+        if (listmachos.Any())
         {
-            media[0] = ursos.Where(u => u.Sexo == 'M').Average(u => u.Peso);
-            Console.WriteLine($"Média do peso dos ursos masculinos: {media[0]:F2} kg");
+            Console.WriteLine($"Média do peso dos ursos machos: {listmachos.Average(u => u.Peso):F2} kg");
         }
-        else
+        if (listfemeas.Any())
         {
-            Console.WriteLine("Nenhum urso masculino registrado.");
+            Console.WriteLine($"Média do peso dos ursos fêmeas: {listfemeas.Average(u => u.Peso):F2} kg");
         }
+        
+        Console.WriteLine();
 
-        if (ursos.Any(u => u.Sexo == 'F'))
-        {
-            media[1] = ursos.Where(u => u.Sexo == 'F').Average(u => u.Peso);
-            Console.WriteLine($"Média do peso dos ursos feminino: {media[1]:F2} kg");
-        }
-        else
-        {
-            Console.WriteLine("Nenhum urso feminino registrado.");
-        }
-
-        int totalUrsos = ursos.Count;
-        int totalMachos = ursos.Count(u => u.Sexo == 'M');
-        int totalFemeas = ursos.Count(u => u.Sexo == 'F');
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("| Categoria    | Ursos | Ursos (%)  | Machos | Machos (%)  | Fêmeas | Fêmeas (%)  |");
         Console.WriteLine("|--------------|-------|------------|--------|-------------|--------|-------------|");
+        Console.ResetColor();
+
+        int totalUrsos = ursos.Count;
+        int totalMachos = listmachos.Count;
+        int totalFemeas = listfemeas.Count;
 
         foreach (var cat in categorias)
         {
@@ -118,23 +136,22 @@ class Program
             int qtd = grupo.Count();
             int machos = grupo.Count(u => u.Sexo == 'M');
             int femeas = grupo.Count(u => u.Sexo == 'F');
-            double pctUrsos = totalUrsos > 0 ? qtd / totalUrsos * 100 : 0;
-            double pctMachos = totalMachos > 0 ? machos / totalMachos * 100 : 0;
-            double pctFemeas = totalFemeas > 0 ? femeas / totalFemeas * 100 : 0;
+            double pctUrsos = totalUrsos > 0 ? (double)qtd / totalUrsos * 100 : 0;
+            double pctMachos = totalMachos > 0 ? (double)machos / totalMachos * 100 : 0;
+            double pctFemeas = totalFemeas > 0 ? (double)femeas / totalFemeas * 100 : 0;
 
             Console.WriteLine($"| {cat,-12} | {qtd,5} | {pctUrsos,9:F0}% | {machos,6} | {pctMachos,10:F0}% | {femeas,6} | {pctFemeas,10:F0}% |");
         }
-
+        
+        Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("|--------------|-------|------------|--------|-------------|--------|-------------|");
-        Console.WriteLine($"| {"Total",-12} | {totalUrsos,5} | {100,9}% | {totalMachos,6} | {(totalUrsos > 0 ? (double)totalMachos / totalUrsos * 100 : 0),10:F0}% | {totalFemeas,6} | {(totalUrsos > 0 ? (double)totalFemeas / totalUrsos * 100 : 0),10:F0}% |");
+        double pctTotalMachos = totalUrsos > 0 ? (double)totalMachos / totalUrsos * 100 : 0;
+        double pctTotalFemeas = totalUrsos > 0 ? (double)totalFemeas / totalUrsos * 100 : 0;
+        Console.WriteLine($"| {"Total",-12} | {totalUrsos,5} | {100,9:F0}% | {totalMachos,6} | {pctTotalMachos,10:F0}% | {totalFemeas,6} | {pctTotalFemeas,10:F0}% |");
+        Console.ResetColor();
 
-
-        histogramas(listmachos, "Ursos Machos");
-        histogramas(listfemeas, "Ursos Fêmeas");
-        histogramas(ursos, "Total de Ursos");
+        histogramas(listmachos, "Distribuição de Ursos Machos", ConsoleColor.Blue);
+        histogramas(listfemeas, "Distribuição de Ursos Fêmeas", ConsoleColor.Magenta);
+        histogramas(ursos, "Distribuição Total de Ursos", ConsoleColor.Green);
     }
-
-
 }
-
-
